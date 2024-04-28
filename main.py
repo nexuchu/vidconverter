@@ -5,17 +5,17 @@ import os
 from GUI import App
 from ffmpeg import FFmpeg, Progress
 
-def on_convert(name, filename, pathname): #converts the provided video to mp4 format
-    print(rf"{pathname}\\{name}.mp4")
-    filecount = len(filename)
-    for num, file_path in enumerate(filename):
+def on_convert(name, files, path, format): #converts the provided video to mp4 format
+    print(rf"{path}\\{name}.mp4")
+    filecount = len(files)
+    for num, file_path in enumerate(files):
         print(file_path)
         ffmpeg = (
             FFmpeg()
             .option("y")
             .input(file_path)
             .output(
-                f"{pathname}\\{name}-{num+1}.mp4",
+                f"{path}\\{name}-{num+1}{format}",
                 codec="copy"
             )
         )
@@ -24,7 +24,7 @@ def on_convert(name, filename, pathname): #converts the provided video to mp4 fo
         def on_completion():
             app.home_frame_button_4.configure(text=f"Converted! {num+1}/{filecount}")
             if num+1 == filecount:
-                os.system(f'start {os.path.realpath(pathname)}')
+                os.system(f'start {os.path.realpath(path)}')
 
         ffmpeg.execute()
 
